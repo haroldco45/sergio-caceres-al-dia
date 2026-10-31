@@ -212,6 +212,14 @@ footer b{color:#fff}
     </div>
   </section>
 
+  <section id="noticias" class="revelar">
+    <div class="titulo"><div><span class="etq"><span data-i="etqNoticias">Lo que dicen los medios</span> · <span data-i="orden">lo más nuevo primero</span></span><h2 data-i="tNoticias">Su día a día</h2></div><small id="actualizado"></small></div>
+    <input class="buscar" id="buscar" type="search" placeholder="Buscar en las noticias..." data-ph="buscarPh">
+    <div class="filtros" id="filtros"></div>
+    <div class="grid" id="grid"></div>
+    <button class="btn mas" id="btnMas" data-i="verMas" hidden>Ver más</button>
+  </section>
+
   <section id="videos" class="revelar">
     <div class="titulo"><div><span class="etq" data-i="etqVideos">En sus palabras</span><h2 data-i="tVideos">Videos</h2></div></div>
     <div class="videos" id="listaVideos"></div>
@@ -240,13 +248,6 @@ footer b{color:#fff}
     <div class="ig-posts" id="igPosts"></div>
   </section>
 
-  <section id="noticias" class="revelar">
-    <div class="titulo"><div><span class="etq" data-i="etqNoticias">Lo que dicen los medios</span><h2 data-i="tNoticias">Su día a día</h2></div><small id="actualizado"></small></div>
-    <input class="buscar" id="buscar" type="search" placeholder="Buscar en las noticias..." data-ph="buscarPh">
-    <div class="filtros" id="filtros"></div>
-    <div class="grid" id="grid"></div>
-    <button class="btn mas" id="btnMas" data-i="verMas" hidden>Ver más</button>
-  </section>
 
 
   <section id="fotos" class="revelar">
@@ -291,7 +292,7 @@ const T = {
     heroSub:'Todo lo que hace el edil de Usaquén, día a día: sus denuncias, su trabajo en la localidad, sus videos y lo que dicen los medios.',
     chip1:'Edil de Usaquén 2024-2027',chip3:'Jurisprudencia, U. del Rosario',hoyTitulo:'Hoy',buscando:'Buscando lo de hoy...',
     votos:'votos con los que llegó a la JAL',edad:'años tenía al ser elegido: el edil más joven de Usaquén',ediles:'ediles tiene la JAL de Usaquén',notasCont:'noticias en el seguimiento',
-    etqNoticias:'Lo que dicen los medios',tNoticias:'Su día a día',buscarPh:'Buscar en las noticias...',verMas:'Ver más',
+    etqNoticias:'Lo que dicen los medios',orden:'lo más nuevo primero',tNoticias:'Su día a día',buscarPh:'Buscar en las noticias...',verMas:'Ver más',
     etqIg:'Donde más publica',igD:'Sus fotos, reels y denuncias tal como las publica.',igB:'Seguir en Instagram',etqVideos:'En sus palabras',tVideos:'Videos',canalT:'Su canal de YouTube',canalD:'El robot trae aquí sus videos nuevos cada 30 minutos.',canalB:'Ver canal',
     etqGal:'Su territorio',tGal:'Usaquén y Bogotá en fotos',etqRec:'De dónde viene',tRec:'Su recorrido',etqEdil:'Para entender',tEdil:'Qué hace un edil',etqRedes:'Síguelo directo',tRedes:'Sus redes',compartir:'Compartir esta app',
     anuncioT:'¿Quieres una app así para tu negocio o tu causa?',anuncioD:'Vibras Positivas HM: apps, páginas y herramientas digitales hechas fácil.',
@@ -304,7 +305,7 @@ const T = {
     heroSub:'Everything the Usaquén local councilor does, day by day: his complaints, his work in the district, his videos and what the media say.',
     chip1:'Usaquén councilor 2024-2027',chip3:'Law, Universidad del Rosario',hoyTitulo:'Today',buscando:'Looking for today\'s news...',
     votos:'votes that got him onto the local board (JAL)',edad:'years old when elected: Usaquén\'s youngest councilor',ediles:'councilors sit on the Usaquén JAL',notasCont:'news items being tracked',
-    etqNoticias:'What the media say',tNoticias:'Day by day',buscarPh:'Search the news...',verMas:'Show more',
+    etqNoticias:'What the media say',orden:'newest first',tNoticias:'Day by day',buscarPh:'Search the news...',verMas:'Show more',
     etqIg:'Where he posts the most',igD:'His photos, reels and complaints, just as he posts them.',igB:'Follow on Instagram',etqVideos:'In his own words',tVideos:'Videos',canalT:'His YouTube channel',canalD:'The robot brings his new videos here every 30 minutes.',canalB:'Open channel',
     etqGal:'His turf',tGal:'Usaquén and Bogotá in photos',etqRec:'Where he comes from',tRec:'His path',etqEdil:'Explainer',tEdil:'What a local councilor does',etqRedes:'Follow him directly',tRedes:'His social media',compartir:'Share this app',
     anuncioT:'Want an app like this for your business or cause?',anuncioD:'Vibras Positivas HM: apps, websites and digital tools made easy.',
@@ -423,13 +424,15 @@ const SI=/(usaqu[eé]n|edil|bogot[aá]|centro democr[aá]tico|sergiocaceresro|\b
 const NO=/(conil|siempre conil|c[aá]diz|paraguay|asunci[oó]n|f[uú]tbol|olimpia)/i;
 let ACT=null, NOTAS=[], VISTOS=new Set(), filtro='todo', limite=12, q='';
 try{VISTOS=new Set(JSON.parse(localStorage.getItem('vistos')||'[]'))}catch(e){}
+const ts = f => {const n=new Date(f).getTime();return isNaN(n)?0:n};
+const iso = f => {const n=ts(f);return n?new Date(n).toISOString():null};
 const clave = s => s.toLowerCase().replace(/\W+/g,' ').trim().slice(0,90);
 const PALETAS=[['#1d2b63','#0b1228'],['#5a1620','#1a0b14'],['#0e4a5a','#0b1228'],['#3d1d63','#120b28'],['#6b3a0c','#1a0f05'],['#16503a','#081a13']];
 
 function mezclar(lista){
   const m=new Map(NOTAS.map(n=>[clave(n.titulo),n]));
   lista.forEach(n=>{if(n&&n.titulo&&!m.has(clave(n.titulo)))m.set(clave(n.titulo),n)});
-  NOTAS=[...m.values()].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  NOTAS=[...m.values()].filter(n=>ts(n.fecha)).sort((a,b)=>ts(b.fecha)-ts(a.fecha));
 }
 async function cargarRobot(){
   try{
@@ -452,10 +455,10 @@ async function buscarEnVivo(){
         const ct=r.headers.get('content-type')||''; let items=[];
         if(ct.includes('json')){
           const j=await r.json();
-          items=(j.items||[]).map(i=>({titulo:i.title,fuente:(i.author||'').trim()||'Google News',enlace:i.link,fecha:new Date(i.pubDate.replace(' ','T')+'Z').toISOString(),desc:i.description||''}));
+          items=(j.items||[]).map(i=>({titulo:i.title,fuente:(i.author||'').trim()||'Google News',enlace:i.link,fecha:iso((i.pubDate||'').replace(' ','T')+'Z'),desc:i.description||''}));
         }else{
           const x=new DOMParser().parseFromString(await r.text(),'text/xml');
-          items=[...x.querySelectorAll('item')].map(i=>({titulo:i.querySelector('title')?.textContent||'',fuente:i.querySelector('source')?.textContent||'Google News',enlace:i.querySelector('link')?.textContent||'',fecha:new Date(i.querySelector('pubDate')?.textContent).toISOString(),desc:i.querySelector('description')?.textContent||''}));
+          items=[...x.querySelectorAll('item')].map(i=>({titulo:i.querySelector('title')?.textContent||'',fuente:i.querySelector('source')?.textContent||'Google News',enlace:i.querySelector('link')?.textContent||'',fecha:iso(i.querySelector('pubDate')?.textContent),desc:i.querySelector('description')?.textContent||''}));
         }
         items=items.filter(i=>{const s=i.titulo+' '+i.desc.replace(/<[^>]+>/g,'');return SI.test(s)&&!NO.test(s)})
           .map(i=>({titulo:i.fuente&&i.titulo.endsWith(' - '+i.fuente)?i.titulo.slice(0,-(i.fuente.length+3)):i.titulo,fuente:i.fuente,enlace:i.enlace,fecha:i.fecha}));
@@ -524,7 +527,7 @@ async function cargarInstagram(){
 async function cargarVideos(){
   try{
     const j=await (await fetch('data/videos.json?t='+Date.now(),{cache:'no-store'})).json();
-    const v=(j.items||[]).slice(0,6);
+    const v=(j.items||[]).sort((a,b)=>ts(b.fecha)-ts(a.fecha)).slice(0,6);
     document.getElementById('listaVideos').innerHTML=v.map(x=>`<div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(x.id)}" title="${esc(x.titulo)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><p>${esc(x.titulo)}<span class="meta" style="display:block">${fechaCorta(x.fecha)}</span></p></div>`).join('');
     document.getElementById('canal').style.marginTop=v.length?'14px':'0';
   }catch(e){}

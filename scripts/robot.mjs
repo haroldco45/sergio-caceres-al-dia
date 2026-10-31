@@ -41,7 +41,7 @@ async function noticias() {
           titulo: titulo.replace(new RegExp(`\\s+-\\s+${fuente.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`), ''),
           fuente,
           enlace: limpiar(tag(it, 'link')),
-          fecha: new Date(limpiar(tag(it, 'pubDate'))).toISOString(),
+          fecha: limpiar(tag(it, 'pubDate')),
         });
       }
     } catch (e) { console.error('Noticias', q, e.message); }
@@ -59,7 +59,7 @@ async function videos() {
       id: limpiar(tag(e, 'yt:videoId')),
       titulo: limpiar(tag(e, 'title')),
       fecha: limpiar(tag(e, 'published')),
-    })).filter(v => v.id);
+    })).filter(v => v.id).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   } catch (e) { console.error('Videos', e.message); return null; }
 }
 
@@ -74,7 +74,12 @@ for (const n of [...nuevas, ...(previo.items || [])]) {
   const k = n.titulo.toLowerCase().replace(/\W+/g, ' ').trim().slice(0, 90);
   if (!mapa.has(k)) mapa.set(k, n);
 }
-const items = [...mapa.values()].sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 150);
+const ts = f => { const n = new Date(f).getTime(); return isNaN(n) ? 0 : n; };
+const items = [...mapa.values()]
+  .filter(n => ts(n.fecha))
+  .map(n => ({ ...n, fecha: new Date(ts(n.fecha)).toISOString() }))
+  .sort((a, b) => ts(b.fecha) - ts(a.fecha)) // lo más nuevo primero
+  .slice(0, 150);
 await writeFile('data/noticias.json', JSON.stringify({ actualizado: new Date().toISOString(), items }, null, 1));
 
 const v = await videos();
