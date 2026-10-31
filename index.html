@@ -121,6 +121,16 @@ section{padding:46px 0 10px}
 .galeria figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(11,18,40,.92));font:700 16px Inter}
 .galeria figcaption small{display:block;font-weight:500;font-size:12px;color:#c9d2ea}
 
+/* Instagram */
+.ig-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-radius:22px;margin-bottom:14px;
+  background:linear-gradient(120deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);background-size:250% 250%;animation:mover 9s ease infinite}
+.ig-cab b{font:900 22px Archivo;display:block}
+.ig-cab small{font-size:13px;color:#fff;opacity:.92}
+.ig-cab .btn{background:#fff;color:#0b1228}
+.ig-perfil{width:100%;height:640px;border:0;border-radius:22px;background:#fff;display:block}
+.ig-posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
+.ig-posts .instagram-media{min-width:0!important;width:100%!important;margin:0!important;border-radius:18px!important}
+
 /* Videos */
 .videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .video{border-radius:20px;overflow:hidden;background:var(--navy2);border:1px solid var(--linea)}
@@ -220,6 +230,16 @@ footer b{color:#fff}
     </div>
   </section>
 
+  <section id="instagram" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqIg">Donde más publica</span><h2>Instagram</h2></div></div>
+    <div class="ig-cab">
+      <div><b>@sergiocaceresro</b><small data-i="igD">Sus fotos, reels y denuncias tal como las publica.</small></div>
+      <a class="btn" href="https://www.instagram.com/sergiocaceresro/" target="_blank" rel="noopener" data-i="igB">Seguir en Instagram</a>
+    </div>
+    <iframe class="ig-perfil" id="igPerfil" loading="lazy" title="Instagram @sergiocaceresro" src="https://www.instagram.com/sergiocaceresro/embed/"></iframe>
+    <div class="ig-posts" id="igPosts"></div>
+  </section>
+
   <section id="noticias" class="revelar">
     <div class="titulo"><div><span class="etq" data-i="etqNoticias">Lo que dicen los medios</span><h2 data-i="tNoticias">Su día a día</h2></div><small id="actualizado"></small></div>
     <input class="buscar" id="buscar" type="search" placeholder="Buscar en las noticias..." data-ph="buscarPh">
@@ -272,7 +292,7 @@ const T = {
     chip1:'Edil de Usaquén 2024-2027',chip3:'Jurisprudencia, U. del Rosario',hoyTitulo:'Hoy',buscando:'Buscando lo de hoy...',
     votos:'votos con los que llegó a la JAL',edad:'años tenía al ser elegido: el edil más joven de Usaquén',ediles:'ediles tiene la JAL de Usaquén',notasCont:'noticias en el seguimiento',
     etqNoticias:'Lo que dicen los medios',tNoticias:'Su día a día',buscarPh:'Buscar en las noticias...',verMas:'Ver más',
-    etqVideos:'En sus palabras',tVideos:'Videos',canalT:'Su canal de YouTube',canalD:'El robot trae aquí sus videos nuevos cada 30 minutos.',canalB:'Ver canal',
+    etqIg:'Donde más publica',igD:'Sus fotos, reels y denuncias tal como las publica.',igB:'Seguir en Instagram',etqVideos:'En sus palabras',tVideos:'Videos',canalT:'Su canal de YouTube',canalD:'El robot trae aquí sus videos nuevos cada 30 minutos.',canalB:'Ver canal',
     etqGal:'Su territorio',tGal:'Usaquén y Bogotá en fotos',etqRec:'De dónde viene',tRec:'Su recorrido',etqEdil:'Para entender',tEdil:'Qué hace un edil',etqRedes:'Síguelo directo',tRedes:'Sus redes',compartir:'Compartir esta app',
     anuncioT:'¿Quieres una app así para tu negocio o tu causa?',anuncioD:'Vibras Positivas HM: apps, páginas y herramientas digitales hechas fácil.',
     aviso:'App ciudadana de seguimiento. No es una cuenta oficial de Sergio Cáceres ni está afiliada a él ni a su partido. Las noticias se enlazan a sus medios originales; los titulares se muestran en su idioma original.',
@@ -285,7 +305,7 @@ const T = {
     chip1:'Usaquén councilor 2024-2027',chip3:'Law, Universidad del Rosario',hoyTitulo:'Today',buscando:'Looking for today\'s news...',
     votos:'votes that got him onto the local board (JAL)',edad:'years old when elected: Usaquén\'s youngest councilor',ediles:'councilors sit on the Usaquén JAL',notasCont:'news items being tracked',
     etqNoticias:'What the media say',tNoticias:'Day by day',buscarPh:'Search the news...',verMas:'Show more',
-    etqVideos:'In his own words',tVideos:'Videos',canalT:'His YouTube channel',canalD:'The robot brings his new videos here every 30 minutes.',canalB:'Open channel',
+    etqIg:'Where he posts the most',igD:'His photos, reels and complaints, just as he posts them.',igB:'Follow on Instagram',etqVideos:'In his own words',tVideos:'Videos',canalT:'His YouTube channel',canalD:'The robot brings his new videos here every 30 minutes.',canalB:'Open channel',
     etqGal:'His turf',tGal:'Usaquén and Bogotá in photos',etqRec:'Where he comes from',tRec:'His path',etqEdil:'Explainer',tEdil:'What a local councilor does',etqRedes:'Follow him directly',tRedes:'His social media',compartir:'Share this app',
     anuncioT:'Want an app like this for your business or cause?',anuncioD:'Vibras Positivas HM: apps, websites and digital tools made easy.',
     aviso:'Independent citizen tracking app. Not an official account of Sergio Cáceres and not affiliated with him or his party. News items link to the original outlets; headlines are shown in their original language (mostly Spanish).',
@@ -490,6 +510,17 @@ document.getElementById('btnMas').onclick=()=>{limite+=12;pintarGrid()};
 document.getElementById('buscar').oninput=e=>{q=e.target.value.trim().toLowerCase();pintarGrid()};
 
 /* ===== Videos ===== */
+/* ===== Instagram: publicaciones elegidas (data/instagram.json) ===== */
+async function cargarInstagram(){
+  try{
+    const j=await (await fetch('data/instagram.json?t='+Date.now(),{cache:'no-store'})).json();
+    const l=(j.publicaciones||[]).filter(u=>/instagram\.com\/(p|reel|tv)\//.test(u)).slice(0,9);
+    if(!l.length) return;
+    document.getElementById('igPosts').innerHTML=l.map(u=>`<blockquote class="instagram-media" data-instgrm-permalink="${esc(u.split('?')[0])}" data-instgrm-version="14"><a href="${esc(u)}" target="_blank" rel="noopener">Instagram</a></blockquote>`).join('');
+    if(window.instgrm) window.instgrm.Embeds.process();
+    else{const sc=document.createElement('script');sc.async=true;sc.src='https://www.instagram.com/embed.js';document.body.appendChild(sc)}
+  }catch(e){}
+}
 async function cargarVideos(){
   try{
     const j=await (await fetch('data/videos.json?t='+Date.now(),{cache:'no-store'})).json();
@@ -531,6 +562,7 @@ document.querySelectorAll('.revelar').forEach(s=>io.observe(s));
 /* ===== Arranque ===== */
 aplicarIdioma();
 cargarFotos();
+cargarInstagram();
 actualizar(false);
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
