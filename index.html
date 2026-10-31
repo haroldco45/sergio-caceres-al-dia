@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sergio Cáceres al Día</title>
+<meta name="description" content="Seguimiento día a día de lo que hace Sergio Cáceres, edil de Usaquén (Bogotá). Software por Vibras Positivas HM.">
+<meta name="theme-color" content="#0b1228">
+<meta property="og:title" content="Sergio Cáceres al Día">
+<meta property="og:description" content="Todo lo que hace el edil de Usaquén, día a día. Noticias reales cada 30 minutos.">
+<meta property="og:image" content="img/icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1228; --navy2:#121c3d; --rojo:#e8473b; --rojo2:#ff6b4a; --oro:#ffc94a;
+  --blanco:#fff; --gris:#9aa6c4; --linea:rgba(255,255,255,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--navy);color:var(--blanco);line-height:1.5;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3{font-family:Archivo,Inter,sans-serif;line-height:1.1}
+
+/* Barra superior */
+.top{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:10px 16px;
+  background:rgba(11,18,40,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--linea)}
+.marca{font-family:Archivo;font-weight:900;font-size:17px;letter-spacing:-.3px;flex:1}
+.marca span{color:var(--rojo2)}
+.btn{border:0;cursor:pointer;font:600 13px Inter;border-radius:999px;padding:9px 14px;color:#fff;background:rgba(255,255,255,.1);transition:.2s}
+.btn:hover{background:rgba(255,255,255,.18)}
+.btn.rojo{background:linear-gradient(135deg,var(--rojo),var(--rojo2));box-shadow:0 6px 20px rgba(232,71,59,.35)}
+.btn.girando{animation:pulso 1s infinite}
+@keyframes pulso{50%{opacity:.55}}
+
+/* Hero con fotos reales que rotan */
+.hero{position:relative;min-height:88vh;display:flex;align-items:flex-end;overflow:hidden}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s;transform:scale(1.12)}
+.slide.on{opacity:1;animation:ken 12s linear forwards}
+@keyframes ken{to{transform:scale(1)}}
+.hero::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(11,18,40,.25) 0%,rgba(11,18,40,.55) 45%,var(--navy) 100%),
+  radial-gradient(circle at 80% 20%,rgba(232,71,59,.45),transparent 55%)}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(120deg,#1d2b63,#0b1228 40%,#5a1620);background-size:300% 300%;animation:mover 14s ease infinite}
+@keyframes mover{50%{background-position:100% 50%}}
+.hero-in{position:relative;z-index:2;padding:0 20px 46px;max-width:960px;margin:0 auto;width:100%}
+.vivo{display:inline-flex;align-items:center;gap:8px;background:rgba(232,71,59,.2);border:1px solid rgba(232,71,59,.6);
+  padding:6px 12px;border-radius:999px;font:700 12px Inter;letter-spacing:1px;text-transform:uppercase}
+.punto{width:8px;height:8px;border-radius:50%;background:var(--rojo2);box-shadow:0 0 0 0 rgba(255,107,74,.7);animation:latido 1.6s infinite}
+@keyframes latido{70%{box-shadow:0 0 0 12px rgba(255,107,74,0)}100%{box-shadow:0 0 0 0 rgba(255,107,74,0)}}
+.hero h1{font-size:clamp(44px,11vw,96px);font-weight:900;letter-spacing:-2px;margin:16px 0 8px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--rojo2),var(--oro));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:clamp(16px,4vw,20px);color:#dbe3f7;max-width:620px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font:600 12px Inter;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid var(--linea)}
+.reloj{margin-top:16px;font:500 13px Inter;color:var(--gris)}
+.credito{position:absolute;right:10px;bottom:8px;z-index:3;font-size:10px;color:rgba(255,255,255,.5)}
+
+/* Ticker */
+.ticker{background:linear-gradient(90deg,var(--rojo),#b62a2a);overflow:hidden;white-space:nowrap;border-block:1px solid rgba(255,255,255,.15)}
+.ticker-in{display:inline-block;padding:11px 0;animation:corre 60s linear infinite;font:600 14px Inter}
+.ticker-in a{text-decoration:none;margin-right:46px}
+.ticker-in a b{color:var(--oro);margin-right:8px;font-weight:800}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+/* Secciones */
+main{max-width:960px;margin:0 auto;padding:0 16px 40px}
+section{padding:46px 0 10px}
+.titulo{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.titulo h2{font-size:clamp(26px,6vw,38px);font-weight:900;letter-spacing:-1px}
+.titulo small{color:var(--gris);font-size:13px}
+.etq{font:800 11px Inter;letter-spacing:2px;color:var(--rojo2);text-transform:uppercase;display:block;margin-bottom:6px}
+.revelar{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+.revelar.ver{opacity:1;transform:none}
+
+/* Hoy */
+.hoy{border-radius:24px;padding:22px;background:linear-gradient(135deg,#1a2550,#2a1238);border:1px solid var(--linea);position:relative;overflow:hidden}
+.hoy::before{content:"";position:absolute;width:260px;height:260px;right:-80px;top:-80px;border-radius:50%;background:radial-gradient(var(--rojo),transparent 70%);opacity:.35;animation:flota 8s ease-in-out infinite}
+@keyframes flota{50%{transform:translate(-30px,30px)}}
+.hoy-fecha{font:800 13px Inter;color:var(--oro);letter-spacing:1px;text-transform:uppercase;position:relative}
+.hoy-lista{position:relative;margin-top:12px;display:grid;gap:10px}
+.hoy-item{display:block;text-decoration:none;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid var(--linea);transition:.25s}
+.hoy-item:hover{transform:translateX(6px);background:rgba(255,255,255,.12)}
+.hoy-item h3{font:700 16px Inter;line-height:1.35}
+.meta{font-size:12px;color:var(--gris);margin-top:6px}
+.vacio{color:var(--gris);font-size:14px;position:relative}
+
+/* Contadores */
+.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.cifra{padding:18px;border-radius:20px;background:var(--navy2);border:1px solid var(--linea)}
+.cifra b{display:block;font:900 34px Archivo;background:linear-gradient(90deg,#fff,var(--oro));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cifra span{font-size:13px;color:var(--gris)}
+
+/* Filtros y noticias */
+.filtros{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}
+.filtros button{flex:none;border:1px solid var(--linea);background:transparent;color:#fff;font:600 13px Inter;padding:8px 14px;border-radius:999px;cursor:pointer;transition:.2s}
+.filtros button.on{background:#fff;color:var(--navy)}
+.buscar{width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--linea);background:var(--navy2);color:#fff;font:500 15px Inter;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.nota{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:170px;padding:18px;border-radius:20px;text-decoration:none;
+  background:linear-gradient(160deg,var(--c1),var(--c2));border:1px solid var(--linea);overflow:hidden;transition:.3s}
+.nota::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);transform:translateX(-100%);transition:.8s}
+.nota:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.nota:hover::after{transform:translateX(100%)}
+.nota .fuente{font:800 11px Inter;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+.nota h3{font:700 17px Inter;line-height:1.35;margin:10px 0}
+.nota .nuevo{position:absolute;top:14px;right:14px;font:800 10px Inter;background:var(--oro);color:var(--navy);padding:4px 8px;border-radius:999px;letter-spacing:1px}
+.mas{display:block;margin:18px auto 0}
+.nota.foto-on,.hoy-item.foto-on{background-size:cover;background-position:center}
+.hoy-item.foto-on{min-height:110px;display:flex;flex-direction:column;justify-content:flex-end}
+.videos .video:first-child{grid-column:1/-1}
+.videos .video:first-child p{font-size:17px}
+.galeria{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none}
+.galeria figure{flex:none;width:78%;max-width:420px;scroll-snap-align:start;border-radius:22px;overflow:hidden;position:relative;background:var(--navy2)}
+.galeria img{width:100%;height:260px;object-fit:cover;display:block;transition:transform 1.2s}
+.galeria figure:hover img{transform:scale(1.07)}
+.galeria figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(11,18,40,.92));font:700 16px Inter}
+.galeria figcaption small{display:block;font-weight:500;font-size:12px;color:#c9d2ea}
+
+/* Videos */
+.videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.video{border-radius:20px;overflow:hidden;background:var(--navy2);border:1px solid var(--linea)}
+.video iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
+.video p{padding:12px 14px;font:600 14px Inter}
+.canal{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-radius:20px;background:linear-gradient(135deg,#3a0d12,#7a1d1d);border:1px solid var(--linea)}
+
+/* Recorrido */
+.linea-t{position:relative;padding-left:26px}
+.linea-t::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--rojo2),var(--oro),transparent)}
+.hito{position:relative;margin-bottom:22px}
+.hito::before{content:"";position:absolute;left:-25px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--navy);border:3px solid var(--rojo2)}
+.hito time{font:800 12px Inter;color:var(--oro);letter-spacing:1px;text-transform:uppercase}
+.hito h3{font:700 18px Inter;margin:4px 0}
+.hito p{color:#c9d2ea;font-size:14px}
+.hito a{font-size:13px;color:var(--rojo2)}
+
+/* Edil explicado */
+.cartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.carta{border-radius:20px;overflow:hidden;background:var(--navy2);border:1px solid var(--linea)}
+.carta .foto{height:130px;background:linear-gradient(135deg,#25356e,#5a1620);background-size:cover;background-position:center;transition:transform .6s}
+.carta:hover .foto{transform:scale(1.06)}
+.carta div.tx{padding:14px 16px}
+.carta h3{font:700 16px Inter;margin-bottom:4px}
+.carta p{font-size:13px;color:#c9d2ea}
+
+/* Redes y anuncio */
+.redes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.red{display:block;text-decoration:none;padding:18px;border-radius:20px;border:1px solid var(--linea);background:var(--navy2);transition:.25s}
+.red:hover{border-color:var(--rojo2);transform:translateY(-3px)}
+.red b{display:block;font:800 18px Archivo}
+.red span{font-size:13px;color:var(--gris)}
+.anuncio{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:40px;padding:22px;border-radius:24px;text-decoration:none;
+  background:linear-gradient(120deg,#0e5a4a,#1d2b63,#5a1620);background-size:200% 200%;animation:mover 10s ease infinite;border:1px solid var(--linea)}
+.anuncio b{font:900 20px Archivo}
+.anuncio small{display:block;color:#d8e2ff;font-size:13px}
+.aviso{margin-top:26px;font-size:12px;color:var(--gris)}
+footer{text-align:center;padding:30px 16px 60px;color:var(--gris);font-size:13px;border-top:1px solid var(--linea)}
+footer b{color:#fff}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#fff;color:var(--navy);font:700 14px Inter;padding:12px 18px;border-radius:999px;z-index:99;transition:.4s;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.toast.on{transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.revelar{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="marca">Cáceres <span>al Día</span></div>
+  <button class="btn" id="btnIdioma" aria-label="Cambiar idioma">EN</button>
+  <button class="btn rojo" id="btnActualizar" data-i="actualizar">Actualizar</button>
+</header>
+
+<div class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-in">
+    <span class="vivo"><span data-i="enVivo">Seguimiento en vivo</span></span>
+    <h1>Sergio Cáceres<br><em data-i="alDia">al Día</em></h1>
+    <p class="sub" data-i="heroSub">Todo lo que hace el edil de Usaquén, día a día: sus denuncias, su trabajo en la localidad, sus videos y lo que dicen los medios.</p>
+    <div class="chips">
+      <span class="chip" data-i="chip1">Edil de Usaquén 2024-2027</span>
+      <span class="chip">Centro Democrático</span>
+      <span class="chip" data-i="chip3">Jurisprudencia, U. del Rosario</span>
+      <span class="chip">Youth Leadership Award</span>
+    </div>
+    <div class="reloj" id="reloj"></div>
+  </div>
+  <div class="credito" id="credito"></div>
+</div>
+
+<div class="ticker" aria-label="Últimos titulares"><div class="ticker-in" id="ticker"></div></div>
+
+<main>
+
+  <section id="hoy" class="revelar">
+    <div class="hoy">
+      <div class="hoy-fecha" id="hoyFecha"></div>
+      <h2 style="font-size:34px;font-weight:900;position:relative;margin-top:4px" data-i="hoyTitulo">Hoy</h2>
+      <div class="hoy-lista" id="hoyLista"><p class="vacio" data-i="buscando">Buscando lo de hoy...</p></div>
+    </div>
+  </section>
+
+  <section id="videos" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqVideos">En sus palabras</span><h2 data-i="tVideos">Videos</h2></div></div>
+    <div class="videos" id="listaVideos"></div>
+    <div class="canal" id="canal">
+      <div><b style="font:900 20px Archivo" data-i="canalT">Su canal de YouTube</b><div class="meta" style="color:#f3c9c4" data-i="canalD">El robot trae aquí sus videos nuevos cada 30 minutos.</div></div>
+      <a class="btn rojo" href="https://www.youtube.com/@caceressss" target="_blank" rel="noopener" data-i="canalB">Ver canal</a>
+    </div>
+  </section>
+
+  <section class="revelar">
+    <div class="cifras">
+      <div class="cifra"><b data-n="4441">0</b><span data-i="votos">votos con los que llegó a la JAL</span></div>
+      <div class="cifra"><b data-n="20">0</b><span data-i="edad">años tenía al ser elegido: el edil más joven de Usaquén</span></div>
+      <div class="cifra"><b data-n="11">0</b><span data-i="ediles">ediles tiene la JAL de Usaquén</span></div>
+      <div class="cifra"><b id="nNotas">0</b><span data-i="notasCont">noticias en el seguimiento</span></div>
+    </div>
+  </section>
+
+  <section id="noticias" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqNoticias">Lo que dicen los medios</span><h2 data-i="tNoticias">Su día a día</h2></div><small id="actualizado"></small></div>
+    <input class="buscar" id="buscar" type="search" placeholder="Buscar en las noticias..." data-ph="buscarPh">
+    <div class="filtros" id="filtros"></div>
+    <div class="grid" id="grid"></div>
+    <button class="btn mas" id="btnMas" data-i="verMas" hidden>Ver más</button>
+  </section>
+
+
+  <section id="fotos" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqGal">Su territorio</span><h2 data-i="tGal">Usaquén y Bogotá en fotos</h2></div></div>
+    <div class="galeria" id="galeria"></div>
+  </section>
+
+  <section id="recorrido" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqRec">De dónde viene</span><h2 data-i="tRec">Su recorrido</h2></div></div>
+    <div class="linea-t" id="linea"></div>
+  </section>
+
+  <section id="edil" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqEdil">Para entender</span><h2 data-i="tEdil">Qué hace un edil</h2></div></div>
+    <div class="cartas" id="cartas"></div>
+  </section>
+
+  <section id="redes" class="revelar">
+    <div class="titulo"><div><span class="etq" data-i="etqRedes">Síguelo directo</span><h2 data-i="tRedes">Sus redes</h2></div></div>
+    <div class="redes">
+      <a class="red" href="https://www.instagram.com/sergiocaceresro/" target="_blank" rel="noopener"><b>Instagram</b><span>@sergiocaceresro</span></a>
+      <a class="red" href="https://x.com/sergiocaceresro" target="_blank" rel="noopener"><b>X (Twitter)</b><span>@sergiocaceresro</span></a>
+      <a class="red" href="https://www.youtube.com/@caceressss" target="_blank" rel="noopener"><b>YouTube</b><span>@caceressss</span></a>
+    </div>
+    <button class="btn rojo mas" id="btnCompartir" data-i="compartir">Compartir esta app</button>
+
+    <a class="anuncio" href="https://www.vibraspositivashm.com" target="_blank" rel="noopener">
+      <div><b data-i="anuncioT">¿Quieres una app así para tu negocio o tu causa?</b><small data-i="anuncioD">Vibras Positivas HM: apps, páginas y herramientas digitales hechas fácil.</small></div>
+      <span class="btn" style="background:#fff;color:#0b1228">vibraspositivashm.com</span>
+    </a>
+    <p class="aviso" data-i="aviso">App ciudadana de seguimiento. No es una cuenta oficial de Sergio Cáceres ni está afiliada a él ni a su partido. Las noticias se enlazan a sus medios originales; los titulares se muestran en su idioma original.</p>
+  </section>
+</main>
+
+<footer>Software por <b>Vibras Positivas HM</b> · Caucasia, Antioquia · <span id="anio"></span></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== Idiomas ===== */
+const T = {
+  es:{actualizar:'Actualizar',enVivo:'Seguimiento en vivo',alDia:'al Día',
+    heroSub:'Todo lo que hace el edil de Usaquén, día a día: sus denuncias, su trabajo en la localidad, sus videos y lo que dicen los medios.',
+    chip1:'Edil de Usaquén 2024-2027',chip3:'Jurisprudencia, U. del Rosario',hoyTitulo:'Hoy',buscando:'Buscando lo de hoy...',
+    votos:'votos con los que llegó a la JAL',edad:'años tenía al ser elegido: el edil más joven de Usaquén',ediles:'ediles tiene la JAL de Usaquén',notasCont:'noticias en el seguimiento',
+    etqNoticias:'Lo que dicen los medios',tNoticias:'Su día a día',buscarPh:'Buscar en las noticias...',verMas:'Ver más',
+    etqVideos:'En sus palabras',tVideos:'Videos',canalT:'Su canal de YouTube',canalD:'El robot trae aquí sus videos nuevos cada 30 minutos.',canalB:'Ver canal',
+    etqGal:'Su territorio',tGal:'Usaquén y Bogotá en fotos',etqRec:'De dónde viene',tRec:'Su recorrido',etqEdil:'Para entender',tEdil:'Qué hace un edil',etqRedes:'Síguelo directo',tRedes:'Sus redes',compartir:'Compartir esta app',
+    anuncioT:'¿Quieres una app así para tu negocio o tu causa?',anuncioD:'Vibras Positivas HM: apps, páginas y herramientas digitales hechas fácil.',
+    aviso:'App ciudadana de seguimiento. No es una cuenta oficial de Sergio Cáceres ni está afiliada a él ni a su partido. Las noticias se enlazan a sus medios originales; los titulares se muestran en su idioma original.',
+    hoyNada:'Hoy todavía no hay titulares nuevos sobre él. Esto es lo más reciente:',sinNotas:'El robot está trayendo las primeras noticias. Toca "Actualizar" en un momento.',
+    act:'Actualizado',hace:'hace',min:'min',h:'h',d:'d',ahora:'ahora',nuevo:'NUEVO',
+    f_todo:'Todo',f_den:'Denuncias',f_usa:'Usaquén',f_pol:'Política nacional',f_sem:'Esta semana',
+    listo:'Al día. ',nuevas:'noticias',copiado:'Enlace copiado',hora:'Hora de Colombia',fotos:'Fotos: Wikipedia / Wikimedia Commons'},
+  en:{actualizar:'Refresh',enVivo:'Live tracking',alDia:'Daily',
+    heroSub:'Everything the Usaquén local councilor does, day by day: his complaints, his work in the district, his videos and what the media say.',
+    chip1:'Usaquén councilor 2024-2027',chip3:'Law, Universidad del Rosario',hoyTitulo:'Today',buscando:'Looking for today\'s news...',
+    votos:'votes that got him onto the local board (JAL)',edad:'years old when elected: Usaquén\'s youngest councilor',ediles:'councilors sit on the Usaquén JAL',notasCont:'news items being tracked',
+    etqNoticias:'What the media say',tNoticias:'Day by day',buscarPh:'Search the news...',verMas:'Show more',
+    etqVideos:'In his own words',tVideos:'Videos',canalT:'His YouTube channel',canalD:'The robot brings his new videos here every 30 minutes.',canalB:'Open channel',
+    etqGal:'His turf',tGal:'Usaquén and Bogotá in photos',etqRec:'Where he comes from',tRec:'His path',etqEdil:'Explainer',tEdil:'What a local councilor does',etqRedes:'Follow him directly',tRedes:'His social media',compartir:'Share this app',
+    anuncioT:'Want an app like this for your business or cause?',anuncioD:'Vibras Positivas HM: apps, websites and digital tools made easy.',
+    aviso:'Independent citizen tracking app. Not an official account of Sergio Cáceres and not affiliated with him or his party. News items link to the original outlets; headlines are shown in their original language (mostly Spanish).',
+    hoyNada:'No new headlines about him yet today. Here is the most recent:',sinNotas:'The robot is fetching the first news items. Tap "Refresh" in a moment.',
+    act:'Updated',hace:'',min:'min ago',h:'h ago',d:'d ago',ahora:'just now',nuevo:'NEW',
+    f_todo:'All',f_den:'Complaints',f_usa:'Usaquén',f_pol:'National politics',f_sem:'This week',
+    listo:'Up to date. ',nuevas:'news items',copiado:'Link copied',hora:'Colombia time',fotos:'Photos: Wikipedia / Wikimedia Commons'}
+};
+let L = (()=>{try{return localStorage.getItem('lang')||'es'}catch(e){return 'es'}})();
+const t = k => (T[L]&&T[L][k]) || T.es[k] || k;
+function aplicarIdioma(){
+  document.documentElement.lang = L;
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=t(e.dataset.ph));
+  document.getElementById('btnIdioma').textContent = L==='es'?'EN':'ES';
+  pintarRecorrido(); pintarCartas(); pintarGaleria(); pintarFiltros(); pintarTodo(); reloj();
+  document.getElementById('credito').textContent = t('fotos');
+}
+document.getElementById('btnIdioma').onclick=()=>{L=L==='es'?'en':'es';try{localStorage.setItem('lang',L)}catch(e){}aplicarIdioma()};
+
+/* ===== Hora real de Colombia (America/Bogota) ===== */
+const TZ='America/Bogota';
+const diaCol = d => new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+function reloj(){
+  const loc = L==='es'?'es-CO':'en-US', ahora=new Date();
+  document.getElementById('reloj').textContent = new Intl.DateTimeFormat(loc,{timeZone:TZ,weekday:'long',day:'numeric',month:'long',hour:'numeric',minute:'2-digit'}).format(ahora)+' · '+t('hora');
+  document.getElementById('hoyFecha').textContent = new Intl.DateTimeFormat(loc,{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(ahora);
+  document.getElementById('anio').textContent = new Intl.DateTimeFormat('es-CO',{timeZone:TZ,year:'numeric'}).format(ahora);
+}
+setInterval(reloj,30000);
+function hace(f){
+  const m=Math.round((Date.now()-new Date(f))/60000);
+  if(m<2) return t('ahora');
+  const v = m<60?`${m} ${t('min')}`: m<1440?`${Math.round(m/60)} ${t('h')}`:`${Math.round(m/1440)} ${t('d')}`;
+  return L==='es'?`${t('hace')} ${v}`:v;
+}
+function fechaCorta(f){return new Intl.DateTimeFormat(L==='es'?'es-CO':'en-US',{timeZone:TZ,day:'numeric',month:'short',year:'numeric'}).format(new Date(f))}
+
+/* ===== Fotos reales (Wikipedia, se cargan solas) ===== */
+const LUGARES = [
+  ['es','Usaquén'],['es','Bogotá'],['es','Cerros_Orientales_de_Bogotá'],['es','Universidad_del_Rosario'],['es','Capitolio_Nacional_de_Colombia'],['es','Plaza_de_Bolívar_(Bogotá)'],
+  ['es','Concejo_de_Bogotá'],['es','Santuario_de_Monserrate'],['es','TransMilenio'],['es','Unicentro_(Bogotá)'],['es','Parque_de_la_93'],['es','Palacio_Liévano'],['en','Usaquén']
+];
+const NOMBRES = {'Usaquén':'Usaquén','Bogotá':'Bogotá','Cerros_Orientales_de_Bogotá':'Cerros Orientales','Universidad_del_Rosario':'Universidad del Rosario','Capitolio_Nacional_de_Colombia':'Capitolio Nacional','Plaza_de_Bolívar_(Bogotá)':'Plaza de Bolívar','Concejo_de_Bogotá':'Concejo de Bogotá','Santuario_de_Monserrate':'Monserrate','TransMilenio':'TransMilenio','Unicentro_(Bogotá)':'Unicentro, Usaquén','Parque_de_la_93':'Parque de la 93','Palacio_Liévano':'Palacio Liévano'};
+const PIE = {es:{'Usaquén':'La localidad que representa','Universidad_del_Rosario':'Donde estudia Jurisprudencia','Capitolio_Nacional_de_Colombia':'Congreso de la República','Concejo_de_Bogotá':'El debate de la ciudad','Palacio_Liévano':'Alcaldía Mayor de Bogotá'},
+             en:{'Usaquén':'The district he represents','Universidad_del_Rosario':'Where he studies law','Capitolio_Nacional_de_Colombia':'National Congress','Concejo_de_Bogotá':'City council debates','Palacio_Liévano':'Bogotá mayor\'s office'}};
+let POOL = [];
+const fotos = {};
+async function traerFoto(lang,titulo){
+  try{
+    const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(titulo)}`);
+    const j = await r.json();
+    return (j.originalimage||j.thumbnail||{}).source || null;
+  }catch(e){return null}
+}
+async function cargarFotos(){
+  const res = await Promise.all(LUGARES.map(([l,ti])=>traerFoto(l,ti)));
+  LUGARES.forEach(([,ti],i)=>{if(res[i]&&!fotos[ti])fotos[ti]=res[i]});
+  POOL=[...new Set(res.filter(Boolean))];
+  pintarGaleria(); pintarTodo();
+  const hero=document.getElementById('hero');
+  const lista=POOL.slice(0,6);
+  lista.forEach((src,i)=>{
+    const d=document.createElement('div');d.className='slide';d.style.backgroundImage=`url("${src}")`;
+    hero.insertBefore(d,hero.querySelector('.hero-in'));
+  });
+  const slides=[...hero.querySelectorAll('.slide')]; let k=0;
+  if(slides.length){slides[0].classList.add('on');setInterval(()=>{slides[k].classList.remove('on');k=(k+1)%slides.length;void slides[k].offsetWidth;slides[k].classList.add('on')},7000)}
+  pintarCartas();
+}
+
+/* ===== Recorrido (hechos verificados) ===== */
+const RECORRIDO = [
+  {f:{es:'2021 - 2023',en:'2021 - 2023'},t:{es:'Consejero de Juventud de Usaquén y de Bogotá',en:'Youth Council member for Usaquén and Bogotá'},
+   p:{es:'Antes de la JAL estuvo en los consejos de juventud de la localidad y del distrito.',en:'Before the local board he sat on the district and city youth councils.'},u:'https://x.com/sergiocaceresro'},
+  {f:{es:'29 oct 2023',en:'Oct 29, 2023'},t:{es:'Elegido edil de Usaquén',en:'Elected local councilor for Usaquén'},
+   p:{es:'Llegó a la Junta Administradora Local por el Centro Democrático con 4.441 votos, como el edil más joven de la localidad (20 años).',en:'He joined the Local Administrative Board for Centro Democrático with 4,441 votes, the youngest councilor in the district (age 20).'},
+   u:'https://bogota.gov.co/mi-ciudad/gobierno/conoce-los-ediles-electos-por-localidad-para-el-periodo-2024-2027'},
+  {f:{es:'Ene 2024',en:'Jan 2024'},t:{es:'Arranca su periodo 2024-2027',en:'His 2024-2027 term begins'},
+   p:{es:'Ocupa una de las 11 curules de la JAL de Usaquén, la localidad número 1 de Bogotá.',en:'He holds one of 11 seats on the board of Usaquén, Bogotá\'s district number 1.'}},
+  {f:{es:'1 jun 2024',en:'Jun 1, 2024'},t:{es:'Primera feria de servicios de Usaquén',en:'First Usaquén services fair'},
+   p:{es:'La organizó junto con la Corporación Minuto de Dios en la sede Coprogreso.',en:'Organized together with Corporación Minuto de Dios at the Coprogreso venue.'}},
+  {f:{es:'2026',en:'2026'},t:{es:'Denuncia ante la Comisión de Acusaciones',en:'Complaint before the Accusations Commission'},
+   p:{es:'Anunció en X que denunció a la fiscal general Luz Adriana Camargo por presunto prevaricato, por la suspensión de órdenes de captura en la Paz Total.',en:'He announced on X that he filed a complaint against Attorney General Luz Adriana Camargo for alleged malfeasance over suspended arrest warrants under "Total Peace".'},
+   u:'https://x.com/sergiocaceresro'},
+  {f:{es:'Hoy',en:'Today'},t:{es:'Estudiante de Jurisprudencia y voz en redes',en:'Law student and social media voice'},
+   p:{es:'Estudia Jurisprudencia en la Universidad del Rosario y publica a diario en Instagram, X y YouTube. Lo nuevo aparece arriba, en "Hoy".',en:'He studies law at Universidad del Rosario and posts daily on Instagram, X and YouTube. New items show up above, under "Today".'}}
+];
+function pintarRecorrido(){
+  document.getElementById('linea').innerHTML = RECORRIDO.map(h=>`<div class="hito"><time>${h.f[L]}</time><h3>${h.t[L]}</h3><p>${h.p[L]}</p>${h.u?`<a href="${h.u}" target="_blank" rel="noopener">${L==='es'?'Ver fuente':'Source'}</a>`:''}</div>`).join('');
+}
+
+/* ===== Qué hace un edil ===== */
+const CARTAS = [
+  {img:'Usaquén',t:{es:'Representa a la localidad',en:'Represents the district'},p:{es:'Los ediles se eligen por voto popular cada 4 años y forman la Junta Administradora Local (JAL).',en:'Councilors are elected every 4 years and make up the Local Administrative Board (JAL).'}},
+  {img:'Bogotá',t:{es:'Vigila la plata local',en:'Oversees local money'},p:{es:'Aprueban el presupuesto del Fondo de Desarrollo Local y hacen control político a la alcaldía local.',en:'They approve the Local Development Fund budget and hold the local mayor\'s office to account.'}},
+  {img:'Cerros_Orientales_de_Bogotá',t:{es:'Cuida servicios y obras',en:'Watches services and works'},p:{es:'Vigilan que los servicios públicos y las obras de la localidad se cumplan bien.',en:'They check that public services and local public works are delivered properly.'}},
+  {img:'Plaza_de_Bolívar_(Bogotá)',t:{es:'Escucha a la comunidad',en:'Listens to residents'},p:{es:'Llevan las quejas de los vecinos y promueven la participación ciudadana.',en:'They carry residents\' complaints and encourage civic participation.'}}
+];
+function pintarGaleria(){
+  const el=document.getElementById('galeria'); if(!el) return;
+  el.innerHTML=Object.keys(NOMBRES).filter(k=>fotos[k]).map(k=>`<figure><img loading="lazy" src="${fotos[k]}" alt="${NOMBRES[k]}"><figcaption>${NOMBRES[k]}${(PIE[L]||{})[k]?`<small>${PIE[L][k]}</small>`:''}</figcaption></figure>`).join('');
+}
+// Foto real de fondo para cada noticia (lugares de Bogotá y Usaquén, rotando)
+function fondo(i,c1,c2){
+  if(!POOL.length) return `background:linear-gradient(160deg,${c1},${c2})`;
+  return `background-image:linear-gradient(180deg,${c1}88 0%,${c2}ee 75%),url('${POOL[i%POOL.length]}')`;
+}
+function pintarCartas(){
+  document.getElementById('cartas').innerHTML = CARTAS.map(c=>`<div class="carta"><div class="foto" style="${fotos[c.img]?`background-image:url('${fotos[c.img]}')`:''}"></div><div class="tx"><h3>${c.t[L]}</h3><p>${c.p[L]}</p></div></div>`).join('');
+}
+
+/* ===== Noticias: robot + búsqueda en vivo ===== */
+const SI=/(usaqu[eé]n|edil|bogot[aá]|centro democr[aá]tico|sergiocaceresro|\bJAL\b|junta administradora)/i;
+const NO=/(conil|siempre conil|c[aá]diz|paraguay|asunci[oó]n|f[uú]tbol|olimpia)/i;
+let ACT=null, NOTAS=[], VISTOS=new Set(), filtro='todo', limite=12, q='';
+try{VISTOS=new Set(JSON.parse(localStorage.getItem('vistos')||'[]'))}catch(e){}
+const clave = s => s.toLowerCase().replace(/\W+/g,' ').trim().slice(0,90);
+const PALETAS=[['#1d2b63','#0b1228'],['#5a1620','#1a0b14'],['#0e4a5a','#0b1228'],['#3d1d63','#120b28'],['#6b3a0c','#1a0f05'],['#16503a','#081a13']];
+
+function mezclar(lista){
+  const m=new Map(NOTAS.map(n=>[clave(n.titulo),n]));
+  lista.forEach(n=>{if(n&&n.titulo&&!m.has(clave(n.titulo)))m.set(clave(n.titulo),n)});
+  NOTAS=[...m.values()].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+}
+async function cargarRobot(){
+  try{
+    const j=await (await fetch('data/noticias.json?t='+Date.now(),{cache:'no-store'})).json();
+    mezclar(j.items||[]);
+    if(j.actualizado) ACT=j.actualizado;
+  }catch(e){}
+}
+async function buscarEnVivo(){
+  const consultas=['"Sergio Cáceres" edil','"Sergio Cáceres" Usaquén'];
+  const proxys=[
+    u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}`,
+    u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`
+  ];
+  for(const c of consultas){
+    const rss=`https://news.google.com/rss/search?q=${encodeURIComponent(c)}&hl=es-419&gl=CO&ceid=CO:es-419`;
+    for(const p of proxys){
+      try{
+        const r=await fetch(p(rss)); if(!r.ok) continue;
+        const ct=r.headers.get('content-type')||''; let items=[];
+        if(ct.includes('json')){
+          const j=await r.json();
+          items=(j.items||[]).map(i=>({titulo:i.title,fuente:(i.author||'').trim()||'Google News',enlace:i.link,fecha:new Date(i.pubDate.replace(' ','T')+'Z').toISOString(),desc:i.description||''}));
+        }else{
+          const x=new DOMParser().parseFromString(await r.text(),'text/xml');
+          items=[...x.querySelectorAll('item')].map(i=>({titulo:i.querySelector('title')?.textContent||'',fuente:i.querySelector('source')?.textContent||'Google News',enlace:i.querySelector('link')?.textContent||'',fecha:new Date(i.querySelector('pubDate')?.textContent).toISOString(),desc:i.querySelector('description')?.textContent||''}));
+        }
+        items=items.filter(i=>{const s=i.titulo+' '+i.desc.replace(/<[^>]+>/g,'');return SI.test(s)&&!NO.test(s)})
+          .map(i=>({titulo:i.fuente&&i.titulo.endsWith(' - '+i.fuente)?i.titulo.slice(0,-(i.fuente.length+3)):i.titulo,fuente:i.fuente,enlace:i.enlace,fecha:i.fecha}));
+        mezclar(items); break;
+      }catch(e){}
+    }
+  }
+}
+function categoria(n){
+  const s=n.titulo.toLowerCase(), c=[];
+  if(/denunci|fiscal|acusaci|prevaricat|procuradur|contralor|investig/.test(s)) c.push('den');
+  if(/usaqu[eé]n|jal|edil|localidad|bogot/.test(s)) c.push('usa');
+  if(/petro|gobierno|congreso|senad|ministr|paz total|presiden|camargo|carrascal/.test(s)) c.push('pol');
+  if(Date.now()-new Date(n.fecha)<7*864e5) c.push('sem');
+  return c;
+}
+function pintarFiltros(){
+  const fs=['todo','den','usa','pol','sem'], nom={todo:'f_todo',den:'f_den',usa:'f_usa',pol:'f_pol',sem:'f_sem'};
+  const el=document.getElementById('filtros');
+  el.innerHTML=fs.map(f=>`<button class="${f===filtro?'on':''}" data-f="${f}">${t(nom[f])}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{filtro=b.dataset.f;limite=12;pintarFiltros();pintarGrid()});
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function tarjeta(n,i){
+  const [c1,c2]=PALETAS[i%PALETAS.length], nuevo=!VISTOS.has(clave(n.titulo));
+  return `<a class="nota${POOL.length?' foto-on':''}" href="${esc(n.enlace)}" target="_blank" rel="noopener" style="--c1:${c1};--c2:${c2};${fondo(i,c1,c2)}">
+    ${nuevo?`<span class="nuevo">${t('nuevo')}</span>`:''}
+    <div><div class="fuente">${esc(n.fuente||'')}</div><h3>${esc(n.titulo)}</h3></div>
+    <div class="meta">${fechaCorta(n.fecha)} · ${hace(n.fecha)}</div></a>`;
+}
+function pintarGrid(){
+  let l=NOTAS.filter(n=>filtro==='todo'||categoria(n).includes(filtro));
+  if(q) l=l.filter(n=>(n.titulo+' '+n.fuente).toLowerCase().includes(q));
+  const g=document.getElementById('grid');
+  g.innerHTML=l.length?l.slice(0,limite).map(tarjeta).join(''):`<p class="vacio">${t('sinNotas')}</p>`;
+  document.getElementById('btnMas').hidden=l.length<=limite;
+}
+function pintarHoy(){
+  const hoy=diaCol(new Date()), deHoy=NOTAS.filter(n=>diaCol(new Date(n.fecha))===hoy), el=document.getElementById('hoyLista');
+  const item=(n,i)=>`<a class="hoy-item${POOL.length?' foto-on':''}" style="${POOL.length?fondo(i+3,'#121c3d','#0b1228'):''}" href="${esc(n.enlace)}" target="_blank" rel="noopener"><h3>${esc(n.titulo)}</h3><div class="meta">${esc(n.fuente||'')} · ${hace(n.fecha)}</div></a>`;
+  if(deHoy.length) el.innerHTML=deHoy.slice(0,6).map(item).join('');
+  else if(NOTAS.length) el.innerHTML=`<p class="vacio">${t('hoyNada')}</p>`+NOTAS.slice(0,3).map(item).join('');
+  else el.innerHTML=`<p class="vacio">${t('sinNotas')}</p>`;
+}
+function pintarTicker(){
+  const l=NOTAS.slice(0,10); if(!l.length){document.getElementById('ticker').innerHTML=`<a>${t('heroSub')}</a><a>${t('heroSub')}</a>`;return}
+  const h=l.map(n=>`<a href="${esc(n.enlace)}" target="_blank" rel="noopener"><b>${esc(n.fuente||'')}</b>${esc(n.titulo)}</a>`).join('');
+  document.getElementById('ticker').innerHTML=h+h;
+}
+function pintarTodo(){document.getElementById('actualizado').textContent=ACT?`${t('act')}: ${hace(ACT)}`:'';pintarHoy();pintarGrid();pintarTicker();document.getElementById('nNotas').textContent=NOTAS.length}
+document.getElementById('btnMas').onclick=()=>{limite+=12;pintarGrid()};
+document.getElementById('buscar').oninput=e=>{q=e.target.value.trim().toLowerCase();pintarGrid()};
+
+/* ===== Videos ===== */
+async function cargarVideos(){
+  try{
+    const j=await (await fetch('data/videos.json?t='+Date.now(),{cache:'no-store'})).json();
+    const v=(j.items||[]).slice(0,6);
+    document.getElementById('listaVideos').innerHTML=v.map(x=>`<div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(x.id)}" title="${esc(x.titulo)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><p>${esc(x.titulo)}<span class="meta" style="display:block">${fechaCorta(x.fecha)}</span></p></div>`).join('');
+    document.getElementById('canal').style.marginTop=v.length?'14px':'0';
+  }catch(e){}
+}
+
+/* ===== Actualizar ===== */
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2600)}
+async function actualizar(aviso){
+  const b=document.getElementById('btnActualizar'); b.classList.add('girando');
+  const antes=NOTAS.length;
+  await cargarRobot(); pintarTodo();
+  await buscarEnVivo(); pintarTodo();
+  await cargarVideos();
+  b.classList.remove('girando');
+  if(aviso) toast(t('listo')+(NOTAS.length-antes>0?`+${NOTAS.length-antes} ${t('nuevas')}`:''));
+  setTimeout(()=>{try{NOTAS.forEach(n=>VISTOS.add(clave(n.titulo)));localStorage.setItem('vistos',JSON.stringify([...VISTOS].slice(-500)))}catch(e){}},4000);
+}
+document.getElementById('btnActualizar').onclick=()=>actualizar(true);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')actualizar(false)});
+
+/* ===== Compartir ===== */
+document.getElementById('btnCompartir').onclick=async()=>{
+  const d={title:'Sergio Cáceres al Día',text:L==='es'?'Todo lo que hace el edil Sergio Cáceres, día a día':'Everything councilor Sergio Cáceres does, day by day',url:location.href.split('#')[0]};
+  if(navigator.share){try{await navigator.share(d)}catch(e){}}
+  else{try{await navigator.clipboard.writeText(d.url);toast(t('copiado'))}catch(e){}}
+};
+
+/* ===== Animaciones al hacer scroll y contadores ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ver');
+  e.target.querySelectorAll('[data-n]').forEach(c=>{const fin=+c.dataset.n,ini=performance.now();
+    (function paso(ahora){const p=Math.min(1,(ahora-ini)/1400);c.textContent=Math.round(fin*(1-Math.pow(1-p,3))).toLocaleString('es-CO');if(p<1)requestAnimationFrame(paso)})(ini)});
+  io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.revelar').forEach(s=>io.observe(s));
+
+/* ===== Arranque ===== */
+aplicarIdioma();
+cargarFotos();
+actualizar(false);
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
