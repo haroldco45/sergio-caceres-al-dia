@@ -121,6 +121,13 @@ section{padding:46px 0 10px}
 .galeria figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(11,18,40,.92));font:700 16px Inter}
 .galeria figcaption small{display:block;font-weight:500;font-size:12px;color:#c9d2ea}
 
+/* Videos dentro del día a día */
+.video-nota{cursor:pointer}
+.video-nota .play{display:inline-block;background:var(--rojo);color:#fff;font:800 11px Inter;letter-spacing:1px;padding:4px 10px;border-radius:999px;margin-right:6px;text-transform:uppercase}
+.video-nota.jugando{padding:0;min-height:0;background:#000!important}
+.video-nota.jugando iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
+.archivo-cab{grid-column:1/-1;text-align:center;padding:10px 0;border-top:1px solid var(--linea);margin-top:6px}
+
 /* Instagram */
 .ig-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-radius:22px;margin-bottom:14px;
   background:linear-gradient(120deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);background-size:250% 250%;animation:mover 9s ease infinite}
@@ -297,7 +304,7 @@ const T = {
     etqGal:'Su territorio',tGal:'Usaquén y Bogotá en fotos',etqRec:'De dónde viene',tRec:'Su recorrido',etqEdil:'Para entender',tEdil:'Qué hace un edil',etqRedes:'Síguelo directo',tRedes:'Sus redes',compartir:'Compartir esta app',
     anuncioT:'¿Quieres una app así para tu negocio o tu causa?',anuncioD:'Vibras Positivas HM: apps, páginas y herramientas digitales hechas fácil.',
     aviso:'App ciudadana de seguimiento. No es una cuenta oficial de Sergio Cáceres ni está afiliada a él ni a su partido. Las noticias se enlazan a sus medios originales; los titulares se muestran en su idioma original.',
-    hoyNada:'Hoy todavía no hay noticias nuevas sobre él. El robot revisa cada 30 minutos y aquí aparecen apenas salgan.',ultima:'La última noticia es del',verTodas:'Ver todas las noticias',sinNotas:'El robot está trayendo las primeras noticias. Toca "Actualizar" en un momento.',
+    hoyNada:'Hoy todavía no ha publicado nada nuevo ni hay noticias sobre él. El robot revisa cada 30 minutos.',loUltimo:'Lo último que publicó esta semana:',video:'Video',verVideo:'Ver video',sinRecientes:'No hay publicaciones de los últimos 60 días.',verArchivo:'Ver noticias anteriores',ocultarArchivo:'Ocultar noticias anteriores',ultima:'La última noticia es del',verTodas:'Ver todas las noticias',sinNotas:'El robot está trayendo las primeras noticias. Toca "Actualizar" en un momento.',
     act:'Actualizado',hace:'hace',min:'min',h:'h',d:'d',ahora:'ahora',nuevo:'NUEVO',
     f_todo:'Todo',f_den:'Denuncias',f_usa:'Usaquén',f_pol:'Política nacional',f_sem:'Esta semana',
     listo:'Al día. ',nuevas:'noticias',copiado:'Enlace copiado',hora:'Hora de Colombia',fotos:'Fotos: Wikipedia / Wikimedia Commons'},
@@ -310,7 +317,7 @@ const T = {
     etqGal:'His turf',tGal:'Usaquén and Bogotá in photos',etqRec:'Where he comes from',tRec:'His path',etqEdil:'Explainer',tEdil:'What a local councilor does',etqRedes:'Follow him directly',tRedes:'His social media',compartir:'Share this app',
     anuncioT:'Want an app like this for your business or cause?',anuncioD:'Vibras Positivas HM: apps, websites and digital tools made easy.',
     aviso:'Independent citizen tracking app. Not an official account of Sergio Cáceres and not affiliated with him or his party. News items link to the original outlets; headlines are shown in their original language (mostly Spanish).',
-    hoyNada:'No news about him yet today. The robot checks every 30 minutes and new items show up here right away.',ultima:'The latest news item is from',verTodas:'See all news',sinNotas:'The robot is fetching the first news items. Tap "Refresh" in a moment.',
+    hoyNada:'Nothing new from him or about him yet today. The robot checks every 30 minutes.',loUltimo:'His latest post this week:',video:'Video',verVideo:'Watch',sinRecientes:'Nothing from the last 60 days.',verArchivo:'Show older news',ocultarArchivo:'Hide older news',ultima:'The latest news item is from',verTodas:'See all news',sinNotas:'The robot is fetching the first news items. Tap "Refresh" in a moment.',
     act:'Updated',hace:'',min:'min ago',h:'h ago',d:'d ago',ahora:'just now',nuevo:'NEW',
     f_todo:'All',f_den:'Complaints',f_usa:'Usaquén',f_pol:'National politics',f_sem:'This week',
     listo:'Up to date. ',nuevas:'news items',copiado:'Link copied',hora:'Colombia time',fotos:'Photos: Wikipedia / Wikimedia Commons'}
@@ -431,7 +438,7 @@ const SI=/(usaqu[eé]n|edil|bogot[aá]|centro democr[aá]tico|sergiocaceresro|\b
 const NO=/(conil|siempre conil|c[aá]diz|paraguay|asunci[oó]n|f[uú]tbol|olimpia)/i;
 // Solo noticias que hablan de ÉL: lo nombran (Cáceres + contexto) o dicen "edil de Usaquén"
 const ES_EL = s => !NO.test(s) && ((/c[aá]ceres/i.test(s) && SI.test(s)) || /edil(es)? (de|por) usaqu[eé]n/i.test(s) || /sergiocaceresro/i.test(s));
-let ACT=null, NOTAS=[], VISTOS=new Set(), filtro='todo', limite=12, q='';
+let ACT=null, VIDEOS=[], verArchivo=false, NOTAS=[], VISTOS=new Set(), filtro='todo', limite=12, q='';
 try{VISTOS=new Set(JSON.parse(localStorage.getItem('vistos')||'[]'))}catch(e){}
 const ts = f => {const n=new Date(f).getTime();return isNaN(n)?0:n};
 const iso = f => {const n=ts(f);return n?new Date(n).toISOString():null};
@@ -476,6 +483,12 @@ async function buscarEnVivo(){
     }
   }
 }
+const DIAS_RECIENTE=60;
+function feed(){
+  const v=VIDEOS.map(x=>({tipo:'video',id:x.id,titulo:x.titulo,fuente:'YouTube · Sergio Cáceres',enlace:'https://www.youtube.com/watch?v='+x.id,fecha:x.fecha}));
+  return [...v,...NOTAS].filter(n=>ts(n.fecha)).sort((a,b)=>ts(b.fecha)-ts(a.fecha));
+}
+const reciente = n => Date.now()-ts(n.fecha) < DIAS_RECIENTE*864e5;
 function categoria(n){
   const s=n.titulo.toLowerCase(), c=[];
   if(/denunci|fiscal|acusaci|prevaricat|procuradur|contralor|investig/.test(s)) c.push('den');
@@ -495,33 +508,49 @@ const esc=s=>sinEmoji(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 const sinFuente = n => n.fuente && n.titulo.endsWith(' - '+n.fuente) ? n.titulo.slice(0,-(n.fuente.length+3)) : n.titulo;
 function tarjeta(n,i){
   const [c1,c2]=PALETAS[i%PALETAS.length], nuevo=!VISTOS.has(clave(n.titulo));
+  if(n.tipo==='video') return `<div class="nota video-nota${POOL.length?' foto-on':''}" data-vid="${esc(n.id)}" role="button" tabindex="0" style="--c1:#5a1620;--c2:#1a0b14;${fondo(i,'#5a1620','#1a0b14')}">
+    ${nuevo?`<span class="nuevo">${t('nuevo')}</span>`:''}
+    <div><div class="fuente">${t('video')} · YouTube</div><h3>${esc(n.titulo)}</h3></div>
+    <div class="meta"><span class="play">${t('verVideo')}</span> ${fechaCorta(n.fecha)} · ${hace(n.fecha)}</div></div>`;
   return `<a class="nota${POOL.length?' foto-on':''}" href="${esc(n.enlace)}" target="_blank" rel="noopener" style="--c1:${c1};--c2:${c2};${fondo(i,c1,c2)}">
     ${nuevo?`<span class="nuevo">${t('nuevo')}</span>`:''}
     <div><div class="fuente">${esc(n.fuente||'')}</div><h3>${esc(sinFuente(n))}</h3></div>
     <div class="meta">${fechaCorta(n.fecha)} · ${hace(n.fecha)}</div></a>`;
 }
 function pintarGrid(){
-  let l=NOTAS.filter(n=>filtro==='todo'||categoria(n).includes(filtro));
+  let l=feed().filter(n=>filtro==='todo'||categoria(n).includes(filtro));
   if(q) l=l.filter(n=>(n.titulo+' '+n.fuente).toLowerCase().includes(q));
+  const nuevas=l.filter(reciente), viejas=l.filter(n=>!reciente(n));
   const g=document.getElementById('grid');
-  g.innerHTML=l.length?l.slice(0,limite).map(tarjeta).join(''):`<p class="vacio">${t('sinNotas')}</p>`;
-  document.getElementById('btnMas').hidden=l.length<=limite;
+  let h=nuevas.length?nuevas.slice(0,limite).map(tarjeta).join(''):`<p class="vacio">${t('sinRecientes')}</p>`;
+  if(viejas.length){
+    h+=`<div class="archivo-cab"><button class="btn" id="btnArchivo">${verArchivo?t('ocultarArchivo'):t('verArchivo')} (${viejas.length})</button></div>`;
+    if(verArchivo) h+=viejas.map((n,i)=>tarjeta(n,i+nuevas.length)).join('');
+  }
+  g.innerHTML=h;
+  document.getElementById('btnMas').hidden=nuevas.length<=limite;
+  const b=document.getElementById('btnArchivo'); if(b) b.onclick=()=>{verArchivo=!verArchivo;pintarGrid()};
+  g.querySelectorAll('[data-vid]').forEach(c=>c.onclick=()=>{
+    if(c.querySelector('iframe')) return;
+    c.classList.add('jugando');
+    c.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${c.dataset.vid}?autoplay=1" title="video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  });
 }
 function pintarHoy(){
-  const hoy=diaCol(new Date()), deHoy=NOTAS.filter(n=>diaCol(new Date(n.fecha))===hoy), el=document.getElementById('hoyLista');
-  const item=(n,i)=>`<a class="hoy-item${POOL.length?' foto-on':''}" style="${POOL.length?fondo(i+3,'#121c3d','#0b1228'):''}" href="${esc(n.enlace)}" target="_blank" rel="noopener"><h3>${esc(sinFuente(n))}</h3><div class="meta">${esc(n.fuente||'')} · ${hace(n.fecha)}</div></a>`;
+  const F=feed(), hoy=diaCol(new Date()), deHoy=F.filter(n=>diaCol(new Date(n.fecha))===hoy), el=document.getElementById('hoyLista');
+  const item=(n,i)=>`<a data-tipo="${n.tipo||''}" class="hoy-item${POOL.length?' foto-on':''}" style="${POOL.length?fondo(i+3,'#121c3d','#0b1228'):''}" href="${esc(n.enlace)}" target="_blank" rel="noopener"><h3>${esc(sinFuente(n))}</h3><div class="meta">${n.tipo==='video'?t('video')+' · YouTube':esc(n.fuente||'')} · ${hace(n.fecha)}</div></a>`;
   if(deHoy.length) el.innerHTML=deHoy.slice(0,6).map(item).join('');
   else{
-    const ult=NOTAS[0];
-    el.innerHTML=`<p class="vacio">${t('hoyNada')}</p>`+(ult?`<p class="meta" style="position:relative">${t('ultima')} ${fechaCorta(ult.fecha)}. <a href="#noticias" style="color:var(--oro)">${t('verTodas')}</a></p>`:'');
+    const ult=F[0], semana=ult&&Date.now()-ts(ult.fecha)<7*864e5;
+    el.innerHTML=`<p class="vacio">${t('hoyNada')}</p>`+(semana?`<p class="meta" style="position:relative;margin-top:8px">${t('loUltimo')}</p>`+item(ult,0):'');
   }
 }
 function pintarTicker(){
-  const l=NOTAS.slice(0,10); if(!l.length){document.getElementById('ticker').innerHTML=`<a>${t('heroSub')}</a><a>${t('heroSub')}</a>`;return}
-  const h=l.map(n=>`<a href="${esc(n.enlace)}" target="_blank" rel="noopener"><b>${esc(n.fuente||'')}</b>${esc(sinFuente(n))}</a>`).join('');
+  const l=feed().filter(reciente).slice(0,10); if(!l.length){document.getElementById('ticker').innerHTML=`<a>${t('heroSub')}</a><a>${t('heroSub')}</a>`;return}
+  const h=l.map(n=>`<a href="${esc(n.enlace)}" target="_blank" rel="noopener"><b>${n.tipo==='video'?t('video'):esc(n.fuente||'')}</b>${esc(sinFuente(n))}</a>`).join('');
   document.getElementById('ticker').innerHTML=h+h;
 }
-function pintarTodo(){document.getElementById('actualizado').textContent=ACT?`${t('act')}: ${hace(ACT)}`:'';pintarHoy();pintarGrid();pintarTicker();document.getElementById('nNotas').textContent=NOTAS.length}
+function pintarTodo(){document.getElementById('actualizado').textContent=ACT?`${t('act')}: ${hace(ACT)}`:'';pintarHoy();pintarGrid();pintarTicker();document.getElementById('nNotas').textContent=feed().length}
 document.getElementById('btnMas').onclick=()=>{limite+=12;pintarGrid()};
 document.getElementById('buscar').oninput=e=>{q=e.target.value.trim().toLowerCase();pintarGrid()};
 
@@ -540,7 +569,8 @@ async function cargarInstagram(){
 async function cargarVideos(){
   try{
     const j=await (await fetch('data/videos.json?t='+Date.now(),{cache:'no-store'})).json();
-    const v=(j.items||[]).sort((a,b)=>ts(b.fecha)-ts(a.fecha)).slice(0,6);
+    VIDEOS=(j.items||[]).sort((a,b)=>ts(b.fecha)-ts(a.fecha));
+    const v=VIDEOS.slice(0,6); pintarTodo();
     document.getElementById('listaVideos').innerHTML=v.map(x=>`<div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/${esc(x.id)}" title="${esc(x.titulo)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><p>${esc(x.titulo)}<span class="meta" style="display:block">${fechaCorta(x.fecha)}</span></p></div>`).join('');
     document.getElementById('canal').style.marginTop=v.length?'14px':'0';
   }catch(e){}

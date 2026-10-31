@@ -58,7 +58,7 @@ async function videos() {
     const id = (html.match(/"(?:channelId|externalId)":"(UC[\w-]{22})"/) || [])[1];
     if (!id) return null;
     const xml = await (await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${id}`, { headers: UA })).text();
-    return xml.split('<entry>').slice(1, 13).map(e => ({
+    return xml.split('<entry>').slice(1, 16).map(e => ({
       id: limpiar(tag(e, 'yt:videoId')),
       titulo: limpiar(tag(e, 'title')),
       fecha: limpiar(tag(e, 'published')),
