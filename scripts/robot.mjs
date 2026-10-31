@@ -22,7 +22,9 @@ const UA = { 'user-agent': 'Mozilla/5.0 (VibrasPositivasHM robot)' };
 function limpiar(s = '') {
   return s.replace(/<!\[CDATA\[|\]\]>/g, '')
     .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/<[^>]+>/g, '').trim();
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/<[^>]+>/g, '')
+    .replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}\u{20E3}]/gu, '') // sin emojis
+    .replace(/\s{2,}/g, ' ').trim();
 }
 const tag = (xml, t) => (xml.match(new RegExp(`<${t}[^>]*>([\\s\\S]*?)</${t}>`)) || [])[1] || '';
 

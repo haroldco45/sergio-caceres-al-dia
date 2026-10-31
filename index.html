@@ -490,7 +490,8 @@ function pintarFiltros(){
   el.innerHTML=fs.map(f=>`<button class="${f===filtro?'on':''}" data-f="${f}">${t(nom[f])}</button>`).join('');
   el.querySelectorAll('button').forEach(b=>b.onclick=()=>{filtro=b.dataset.f;limite=12;pintarFiltros();pintarGrid()});
 }
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sinEmoji=s=>String(s).replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}\u{20E3}]/gu,'').replace(/\s{2,}/g,' ').trim();
+const esc=s=>sinEmoji(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const sinFuente = n => n.fuente && n.titulo.endsWith(' - '+n.fuente) ? n.titulo.slice(0,-(n.fuente.length+3)) : n.titulo;
 function tarjeta(n,i){
   const [c1,c2]=PALETAS[i%PALETAS.length], nuevo=!VISTOS.has(clave(n.titulo));
