@@ -16,6 +16,7 @@ const CONSULTAS = [
 const SI = /(usaqu[eé]n|edil|bogot[aá]|centro democr[aá]tico|sergiocaceresro|\bJAL\b|junta administradora)/i;
 const NO = /(conil|siempre conil|c[aá]diz|paraguay|asunci[oó]n|futbol|fútbol|olimpia|cerro porte)/i;
 
+const ES_EL = s => !NO.test(s) && ((/c[aá]ceres/i.test(s) && SI.test(s)) || /edil(es)? (de|por) usaqu[eé]n/i.test(s) || /sergiocaceresro/i.test(s));
 const UA = { 'user-agent': 'Mozilla/5.0 (VibrasPositivasHM robot)' };
 
 function limpiar(s = '') {
@@ -36,7 +37,7 @@ async function noticias() {
         const fuente = limpiar(tag(it, 'source'));
         const desc = limpiar(tag(it, 'description'));
         const texto = `${titulo} ${desc}`;
-        if (!SI.test(texto) || NO.test(texto)) continue;
+        if (!ES_EL(texto)) continue;
         out.push({
           titulo: titulo.replace(new RegExp(`\\s+-\\s+${fuente.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`), ''),
           fuente,
@@ -76,7 +77,7 @@ for (const n of [...nuevas, ...(previo.items || [])]) {
 }
 const ts = f => { const n = new Date(f).getTime(); return isNaN(n) ? 0 : n; };
 const items = [...mapa.values()]
-  .filter(n => ts(n.fecha))
+  .filter(n => ts(n.fecha) && ES_EL(n.titulo))
   .map(n => ({ ...n, fecha: new Date(ts(n.fecha)).toISOString() }))
   .sort((a, b) => ts(b.fecha) - ts(a.fecha)) // lo más nuevo primero
   .slice(0, 150);

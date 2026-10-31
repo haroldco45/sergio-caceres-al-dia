@@ -297,7 +297,7 @@ const T = {
     etqGal:'Su territorio',tGal:'Usaquén y Bogotá en fotos',etqRec:'De dónde viene',tRec:'Su recorrido',etqEdil:'Para entender',tEdil:'Qué hace un edil',etqRedes:'Síguelo directo',tRedes:'Sus redes',compartir:'Compartir esta app',
     anuncioT:'¿Quieres una app así para tu negocio o tu causa?',anuncioD:'Vibras Positivas HM: apps, páginas y herramientas digitales hechas fácil.',
     aviso:'App ciudadana de seguimiento. No es una cuenta oficial de Sergio Cáceres ni está afiliada a él ni a su partido. Las noticias se enlazan a sus medios originales; los titulares se muestran en su idioma original.',
-    hoyNada:'Hoy todavía no hay titulares nuevos sobre él. Esto es lo más reciente:',sinNotas:'El robot está trayendo las primeras noticias. Toca "Actualizar" en un momento.',
+    hoyNada:'Hoy todavía no hay noticias nuevas sobre él. El robot revisa cada 30 minutos y aquí aparecen apenas salgan.',ultima:'La última noticia es del',verTodas:'Ver todas las noticias',sinNotas:'El robot está trayendo las primeras noticias. Toca "Actualizar" en un momento.',
     act:'Actualizado',hace:'hace',min:'min',h:'h',d:'d',ahora:'ahora',nuevo:'NUEVO',
     f_todo:'Todo',f_den:'Denuncias',f_usa:'Usaquén',f_pol:'Política nacional',f_sem:'Esta semana',
     listo:'Al día. ',nuevas:'noticias',copiado:'Enlace copiado',hora:'Hora de Colombia',fotos:'Fotos: Wikipedia / Wikimedia Commons'},
@@ -310,7 +310,7 @@ const T = {
     etqGal:'His turf',tGal:'Usaquén and Bogotá in photos',etqRec:'Where he comes from',tRec:'His path',etqEdil:'Explainer',tEdil:'What a local councilor does',etqRedes:'Follow him directly',tRedes:'His social media',compartir:'Share this app',
     anuncioT:'Want an app like this for your business or cause?',anuncioD:'Vibras Positivas HM: apps, websites and digital tools made easy.',
     aviso:'Independent citizen tracking app. Not an official account of Sergio Cáceres and not affiliated with him or his party. News items link to the original outlets; headlines are shown in their original language (mostly Spanish).',
-    hoyNada:'No new headlines about him yet today. Here is the most recent:',sinNotas:'The robot is fetching the first news items. Tap "Refresh" in a moment.',
+    hoyNada:'No news about him yet today. The robot checks every 30 minutes and new items show up here right away.',ultima:'The latest news item is from',verTodas:'See all news',sinNotas:'The robot is fetching the first news items. Tap "Refresh" in a moment.',
     act:'Updated',hace:'',min:'min ago',h:'h ago',d:'d ago',ahora:'just now',nuevo:'NEW',
     f_todo:'All',f_den:'Complaints',f_usa:'Usaquén',f_pol:'National politics',f_sem:'This week',
     listo:'Up to date. ',nuevas:'news items',copiado:'Link copied',hora:'Colombia time',fotos:'Photos: Wikipedia / Wikimedia Commons'}
@@ -422,6 +422,8 @@ function pintarCartas(){
 /* ===== Noticias: robot + búsqueda en vivo ===== */
 const SI=/(usaqu[eé]n|edil|bogot[aá]|centro democr[aá]tico|sergiocaceresro|\bJAL\b|junta administradora)/i;
 const NO=/(conil|siempre conil|c[aá]diz|paraguay|asunci[oó]n|f[uú]tbol|olimpia)/i;
+// Solo noticias que hablan de ÉL: lo nombran (Cáceres + contexto) o dicen "edil de Usaquén"
+const ES_EL = s => !NO.test(s) && ((/c[aá]ceres/i.test(s) && SI.test(s)) || /edil(es)? (de|por) usaqu[eé]n/i.test(s) || /sergiocaceresro/i.test(s));
 let ACT=null, NOTAS=[], VISTOS=new Set(), filtro='todo', limite=12, q='';
 try{VISTOS=new Set(JSON.parse(localStorage.getItem('vistos')||'[]'))}catch(e){}
 const ts = f => {const n=new Date(f).getTime();return isNaN(n)?0:n};
@@ -432,7 +434,7 @@ const PALETAS=[['#1d2b63','#0b1228'],['#5a1620','#1a0b14'],['#0e4a5a','#0b1228']
 function mezclar(lista){
   const m=new Map(NOTAS.map(n=>[clave(n.titulo),n]));
   lista.forEach(n=>{if(n&&n.titulo&&!m.has(clave(n.titulo)))m.set(clave(n.titulo),n)});
-  NOTAS=[...m.values()].filter(n=>ts(n.fecha)).sort((a,b)=>ts(b.fecha)-ts(a.fecha));
+  NOTAS=[...m.values()].filter(n=>ts(n.fecha)&&ES_EL(n.titulo)).sort((a,b)=>ts(b.fecha)-ts(a.fecha));
 }
 async function cargarRobot(){
   try{
@@ -455,12 +457,12 @@ async function buscarEnVivo(){
         const ct=r.headers.get('content-type')||''; let items=[];
         if(ct.includes('json')){
           const j=await r.json();
-          items=(j.items||[]).map(i=>({titulo:i.title,fuente:(i.author||'').trim()||'Google News',enlace:i.link,fecha:iso((i.pubDate||'').replace(' ','T')+'Z'),desc:i.description||''}));
+          items=(j.items||[]).map(i=>({titulo:i.title,fuente:(i.author||'').trim()||((i.title||'').match(/ - ([^-]+)$/)||[])[1]||'',enlace:i.link,fecha:iso((i.pubDate||'').replace(' ','T')+'Z'),desc:i.description||''}));
         }else{
           const x=new DOMParser().parseFromString(await r.text(),'text/xml');
           items=[...x.querySelectorAll('item')].map(i=>({titulo:i.querySelector('title')?.textContent||'',fuente:i.querySelector('source')?.textContent||'Google News',enlace:i.querySelector('link')?.textContent||'',fecha:iso(i.querySelector('pubDate')?.textContent),desc:i.querySelector('description')?.textContent||''}));
         }
-        items=items.filter(i=>{const s=i.titulo+' '+i.desc.replace(/<[^>]+>/g,'');return SI.test(s)&&!NO.test(s)})
+        items=items.filter(i=>ES_EL(i.titulo+' '+i.desc.replace(/<[^>]+>/g,'')))
           .map(i=>({titulo:i.fuente&&i.titulo.endsWith(' - '+i.fuente)?i.titulo.slice(0,-(i.fuente.length+3)):i.titulo,fuente:i.fuente,enlace:i.enlace,fecha:i.fecha}));
         mezclar(items); break;
       }catch(e){}
@@ -482,11 +484,12 @@ function pintarFiltros(){
   el.querySelectorAll('button').forEach(b=>b.onclick=()=>{filtro=b.dataset.f;limite=12;pintarFiltros();pintarGrid()});
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sinFuente = n => n.fuente && n.titulo.endsWith(' - '+n.fuente) ? n.titulo.slice(0,-(n.fuente.length+3)) : n.titulo;
 function tarjeta(n,i){
   const [c1,c2]=PALETAS[i%PALETAS.length], nuevo=!VISTOS.has(clave(n.titulo));
   return `<a class="nota${POOL.length?' foto-on':''}" href="${esc(n.enlace)}" target="_blank" rel="noopener" style="--c1:${c1};--c2:${c2};${fondo(i,c1,c2)}">
     ${nuevo?`<span class="nuevo">${t('nuevo')}</span>`:''}
-    <div><div class="fuente">${esc(n.fuente||'')}</div><h3>${esc(n.titulo)}</h3></div>
+    <div><div class="fuente">${esc(n.fuente||'')}</div><h3>${esc(sinFuente(n))}</h3></div>
     <div class="meta">${fechaCorta(n.fecha)} · ${hace(n.fecha)}</div></a>`;
 }
 function pintarGrid(){
@@ -498,14 +501,16 @@ function pintarGrid(){
 }
 function pintarHoy(){
   const hoy=diaCol(new Date()), deHoy=NOTAS.filter(n=>diaCol(new Date(n.fecha))===hoy), el=document.getElementById('hoyLista');
-  const item=(n,i)=>`<a class="hoy-item${POOL.length?' foto-on':''}" style="${POOL.length?fondo(i+3,'#121c3d','#0b1228'):''}" href="${esc(n.enlace)}" target="_blank" rel="noopener"><h3>${esc(n.titulo)}</h3><div class="meta">${esc(n.fuente||'')} · ${hace(n.fecha)}</div></a>`;
+  const item=(n,i)=>`<a class="hoy-item${POOL.length?' foto-on':''}" style="${POOL.length?fondo(i+3,'#121c3d','#0b1228'):''}" href="${esc(n.enlace)}" target="_blank" rel="noopener"><h3>${esc(sinFuente(n))}</h3><div class="meta">${esc(n.fuente||'')} · ${hace(n.fecha)}</div></a>`;
   if(deHoy.length) el.innerHTML=deHoy.slice(0,6).map(item).join('');
-  else if(NOTAS.length) el.innerHTML=`<p class="vacio">${t('hoyNada')}</p>`+NOTAS.slice(0,3).map(item).join('');
-  else el.innerHTML=`<p class="vacio">${t('sinNotas')}</p>`;
+  else{
+    const ult=NOTAS[0];
+    el.innerHTML=`<p class="vacio">${t('hoyNada')}</p>`+(ult?`<p class="meta" style="position:relative">${t('ultima')} ${fechaCorta(ult.fecha)}. <a href="#noticias" style="color:var(--oro)">${t('verTodas')}</a></p>`:'');
+  }
 }
 function pintarTicker(){
   const l=NOTAS.slice(0,10); if(!l.length){document.getElementById('ticker').innerHTML=`<a>${t('heroSub')}</a><a>${t('heroSub')}</a>`;return}
-  const h=l.map(n=>`<a href="${esc(n.enlace)}" target="_blank" rel="noopener"><b>${esc(n.fuente||'')}</b>${esc(n.titulo)}</a>`).join('');
+  const h=l.map(n=>`<a href="${esc(n.enlace)}" target="_blank" rel="noopener"><b>${esc(n.fuente||'')}</b>${esc(sinFuente(n))}</a>`).join('');
   document.getElementById('ticker').innerHTML=h+h;
 }
 function pintarTodo(){document.getElementById('actualizado').textContent=ACT?`${t('act')}: ${hace(ACT)}`:'';pintarHoy();pintarGrid();pintarTicker();document.getElementById('nNotas').textContent=NOTAS.length}
