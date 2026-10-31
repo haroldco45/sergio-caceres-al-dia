@@ -1,4 +1,4 @@
-const CACHE = 'caceres-al-dia-v5';
+const CACHE = 'caceres-al-dia-v6';
 const BASE = ['./', 'index.html', 'manifest.webmanifest', 'img/icon-192.png', 'img/icon-512.png'];
 
 self.addEventListener('install', e => {
