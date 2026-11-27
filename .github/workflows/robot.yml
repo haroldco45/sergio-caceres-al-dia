@@ -27,4 +27,4 @@ jobs:
           git config user.name "Robot Vibras Positivas HM"
           git config user.email "actions@github.com"
           git add data/
-          git diff --cached --quiet || (git commit -m "Robot: noticias al día $(TZ=America/Bogota date '+%Y-%m-%d %H:%M')" && git push)
+          git diff --cached --quiet || (git commit -m "[skip netlify] Robot: noticias al día $(TZ=America/Bogota date '+%Y-%m-%d %H:%M')" && git push)
